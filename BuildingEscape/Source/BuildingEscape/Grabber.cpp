@@ -23,8 +23,26 @@ void UGrabber::BeginPlay()
 
 	UE_LOG(LogTemp, Warning, TEXT("Grabber ready!"));
 
+	// get attached physic handler at the start of the game
+	PhysicsHandle = GetOwner()->FindComponentByClass<UPhysicsHandleComponent>();
+	if (!PhysicsHandle) {
+		UE_LOG(LogTemp, Error, TEXT("No physic handler found for %s"), *GetOwner()->GetName());
+	}
+
+	//get input component from the pawn
+	InputComponent = GetOwner()->FindComponentByClass<UInputComponent>();
+	if (InputComponent) {
+		InputComponent->BindAction("Grab", IE_Pressed, this, &UGrabber::Grab);
+	}
+	else {
+		UE_LOG(LogTemp, Error, TEXT("No input component found for %s"), *GetOwner()->GetName());
+	}
 }
 
+void UGrabber::Grab() {
+	UE_LOG(LogTemp, Warning, TEXT("Grab pressed"));
+
+}
 
 // Called every frame
 void UGrabber::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
@@ -38,10 +56,10 @@ void UGrabber::TickComponent(float DeltaTime, ELevelTick TickType, FActorCompone
 	GetWorld()->GetFirstPlayerController()->GetPlayerViewPoint(OUT PlayerViewPointLocation,OUT PlayerViewPointRotation);
 
 	// Log out location and rotation of the actor
-	UE_LOG(LogTemp, Warning, TEXT("Location: %s, Rotation: %s"),
+	/*UE_LOG(LogTemp, Warning, TEXT("Location: %s, Rotation: %s"),
 		*PlayerViewPointLocation.ToString(), 
 		*PlayerViewPointRotation.ToString()
-	);
+	);*/
 
 	FVector LineTraceEnd = PlayerViewPointLocation + PlayerViewPointRotation.Vector() * Reach;
 
@@ -69,6 +87,7 @@ void UGrabber::TickComponent(float DeltaTime, ELevelTick TickType, FActorCompone
 		FCollisionObjectQueryParams(ECollisionChannel::ECC_PhysicsBody),
 		TraceParameters
 	);
+	
 	AActor* ActorHit = Hit.GetActor();
 	if (ActorHit) {
 		UE_LOG(LogTemp, Warning, TEXT("Hit %s"), *ActorHit->GetName());

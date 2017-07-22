@@ -25,5 +25,10 @@ public:
 
 private:
 	float Reach = 100.f; //max grabbing distance
+
+	UPhysicsHandleComponent* PhysicsHandle = nullptr;
+	UInputComponent* InputComponent = nullptr;
 	
+	// ray-cast and grab whats in reach
+	void Grab();
 };
