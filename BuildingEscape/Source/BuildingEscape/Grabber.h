@@ -40,4 +40,8 @@ private:
 	
 	// called when grab key is released
 	void Release();
+
+	FVector GetLineTraceEnd() const;
+	FVector GetLineTraceStart() const;
+
 };
