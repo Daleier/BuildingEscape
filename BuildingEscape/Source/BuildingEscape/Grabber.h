@@ -19,9 +19,15 @@ protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
 
+	void SetupInputComponent();
+
+	void FindPhysicsHandleComponent();
+
 public:	
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
+
+	const FHitResult GetFirstPhysicsBodyInReach();
 
 private:
 	float Reach = 100.f; //max grabbing distance
@@ -31,4 +37,7 @@ private:
 	
 	// ray-cast and grab whats in reach
 	void Grab();
+	
+	// called when grab key is released
+	void Release();
 };
